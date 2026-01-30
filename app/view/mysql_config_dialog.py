@@ -181,6 +181,10 @@ class MySQLConfigDialog(QDialog):
                 self.mysql_manager.config_manager.set_configured(True)
                 self.is_configured = True
                 QMessageBox.information(self, "连接成功", message)
+                
+                # 禁用测试连接按钮（因为已经成功）
+                self.test_btn.setEnabled(False)
+                self.test_btn.setText("连接已测试")
                 self.update_ui_state()
             else:
                 QMessageBox.warning(self, "连接失败", message)
@@ -270,13 +274,33 @@ class MySQLConfigDialog(QDialog):
         else:
             # 当前是普通用户，验证管理员权限
             password, ok = self.get_admin_password()
-            if ok and password == "123":  # 管理员密码验证
-                self.is_admin = True
-                # 管理员验证成功后，解除所有被禁用的组件
-                self.enable_all_inputs()
-                self.update_ui_state()
+            
+            if not ok:
+                return  # 用户取消了
+            
+            # 如果数据库已初始化，验证数据库中的管理员密码
+            if self.is_initialized:
+                try:
+                    # 验证数据库中的管理员密码
+                    success, message = self.mysql_manager.verify_user("admin", password)
+                    if success:
+                        self.is_admin = True
+                        # 管理员验证成功后，解除所有被禁用的组件
+                        self.enable_all_inputs()
+                        self.update_ui_state()
+                    else:
+                        QMessageBox.warning(self, "权限不足", "管理员密码错误")
+                except Exception as e:
+                    QMessageBox.critical(self, "验证异常", f"验证管理员密码时发生异常：\n{str(e)}")
             else:
-                QMessageBox.warning(self, "权限不足", "管理员密码错误")
+                # 数据库未初始化时，使用默认管理员密码
+                if password == "lipper":
+                    self.is_admin = True
+                    # 管理员验证成功后，解除所有被禁用的组件
+                    self.enable_all_inputs()
+                    self.update_ui_state()
+                else:
+                    QMessageBox.warning(self, "权限不足", "管理员密码错误")
 
     def enable_all_inputs(self):
         """ 启用所有输入组件 """
