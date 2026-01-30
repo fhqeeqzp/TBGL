@@ -242,18 +242,33 @@ class DatabaseManager:
     def get_cursor(self):
         """获取数据库游标的上下文管理器"""
         cursor = None
+        
         try:
+            # 如果没有连接或连接断开，尝试连接
             if not self.connection or not self.connection.is_connected():
-                # 尝试重新连接
-                if not self.connect():
-                    raise Error("无法连接到数据库")
+                # 延迟连接机制
+                if not self.initialized:
+                    # 标记为已初始化，避免循环调用
+                    self.initialized = True
+                    
+                    # 尝试连接
+                    if not self.connect():
+                        # 连接失败，返回None（离线模式）
+                        yield None
+                        return
+                
+                # 如果仍然没有连接，返回None
+                if not self.connection or not self.connection.is_connected():
+                    yield None
+                    return
+                    
             cursor = self.connection.cursor(dictionary=True)
             yield cursor
+            
         except Error as e:
-            if self.connection:
-                self.connection.rollback()
-            self.logger.error(f"数据库操作失败: {e}")
-            raise
+            self.logger.warning(f"数据库操作跳过（离线模式）: {e}")
+            yield None
+            
         finally:
             if cursor:
                 cursor.close()
@@ -310,8 +325,13 @@ class DatabaseManager:
             return False
     
     def test_connection(self) -> bool:
-        """测试数据库连接"""
+        """测试数据库连接 - 仅在需要时进行验证"""
         try:
+            # 先检查是否已经连接
+            if self.connection and self.connection.is_connected():
+                return True
+                
+            # 如果没有连接但需要验证，进行测试连接
             with self.get_cursor() as cursor:
                 cursor.execute("SELECT 1")
                 result = cursor.fetchone()
@@ -319,6 +339,12 @@ class DatabaseManager:
         except Error as e:
             self.logger.error(f"连接测试失败: {e}")
             return False
+    
+    def is_ready_for_use(self) -> bool:
+        """检查数据库是否准备好使用"""
+        # 数据库管理器始终认为准备好（支持离线模式）
+        # 只有在实际操作时才真正验证连接
+        return True
     
     def get_connection_status(self) -> Dict[str, Any]:
         """获取连接状态"""

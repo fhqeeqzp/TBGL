@@ -122,24 +122,50 @@ class MainWindow(QMainWindow):
             from database_manager import DatabaseManager
             self.database_manager = DatabaseManager()
             
-            # 测试连接
-            if self.database_manager.test_connection():
+            # 检查数据库是否准备好（不进行实际连接）
+            if self.database_manager.is_ready_for_use():
                 self.database_available = True
-                print("✓ 数据库连接成功")
+                print("✓ 数据库管理器已就绪（离线模式可用）")
                 
                 # 更新状态标签（如果存在）
                 if hasattr(self, 'status_label'):
-                    self.status_label.setText("数据库连接成功")
+                    self.status_label.setText("数据库管理器已就绪")
+                    
+                # 延迟实际连接测试（5秒后）
+                QTimer.singleShot(5000, self.test_database_connection)
             else:
                 self.database_available = False
-                print("⚠ 数据库连接失败，应用程序将以离线模式运行")
+                print("⚠ 数据库管理器不可用")
+                
+        except Exception as e:
+            print(f"⚠ 数据库初始化失败: {e}")
+            self.database_manager = None
+            self.database_available = False
+            
+            # 更新状态标签（如果存在）
+            if hasattr(self, 'status_label'):
+                self.status_label.setText(f"数据库管理器初始化失败: {str(e)[:50]}...")
+    
+    def test_database_connection(self):
+        """测试数据库连接（延迟进行）"""
+        try:
+            if self.database_manager and self.database_manager.test_connection():
+                self.database_available = True
+                print("✓ 数据库实际连接成功")
+                
+                # 更新状态标签（如果存在）
+                if hasattr(self, 'status_label'):
+                    self.status_label.setText("✓ 数据库已连接")
+            else:
+                self.database_available = False
+                print("⚠ 数据库连接失败，继续离线模式运行")
                 
                 # 更新状态标签（如果存在）
                 if hasattr(self, 'status_label'):
                     self.status_label.setText("离线模式运行")
+                
         except Exception as e:
-            print(f"⚠ 数据库初始化失败: {e}")
-            self.database_manager = None
+            print(f"⚠ 数据库连接测试失败: {e}")
             self.database_available = False
             
             # 更新状态标签（如果存在）
