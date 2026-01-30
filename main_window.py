@@ -113,8 +113,8 @@ class MainWindow(QMainWindow):
         self.apply_theme()
         self.apply_style()
         
-        # 尝试初始化数据库（在后台进行）
-        self.initialize_database()
+        # 延迟数据库初始化以避免阻塞GUI
+        QTimer.singleShot(100, self.initialize_database)
     
     def initialize_database(self):
         """初始化数据库连接"""
@@ -126,12 +126,25 @@ class MainWindow(QMainWindow):
             if self.database_manager.test_connection():
                 self.database_available = True
                 print("✓ 数据库连接成功")
+                
+                # 更新状态标签（如果存在）
+                if hasattr(self, 'status_label'):
+                    self.status_label.setText("数据库连接成功")
             else:
+                self.database_available = False
                 print("⚠ 数据库连接失败，应用程序将以离线模式运行")
+                
+                # 更新状态标签（如果存在）
+                if hasattr(self, 'status_label'):
+                    self.status_label.setText("离线模式运行")
         except Exception as e:
             print(f"⚠ 数据库初始化失败: {e}")
             self.database_manager = None
             self.database_available = False
+            
+            # 更新状态标签（如果存在）
+            if hasattr(self, 'status_label'):
+                self.status_label.setText(f"数据库连接失败: {str(e)[:50]}...")
         
     def setup_ui(self):
         """设置UI"""

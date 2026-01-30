@@ -39,8 +39,11 @@ class DatabaseManager:
             'password': os.getenv('DB_PASSWORD', ''),
             'charset': 'utf8mb4',
             'autocommit': False,
-            'connect_timeout': 10,
-            'raise_on_warnings': False
+            'connect_timeout': 30,
+            'raise_on_warnings': False,
+            'pool_name': 'bidding_pool',
+            'pool_size': 5,
+            'pool_reset_session': True
         }
         
         return config

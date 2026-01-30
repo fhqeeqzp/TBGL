@@ -112,22 +112,8 @@ class Application:
             # 初始化主题管理器
             self.theme_manager = ThemeManager()
             
-            if self.splash:
-                self.splash.showMessage("正在连接数据库...", Qt.AlignmentFlag.AlignCenter, Qt.GlobalColor.black)
-                self.app.processEvents()
-            
-            # 初始化数据库管理器
-            self.database_manager = DatabaseManager()
-            
-            # 测试数据库连接
-            if not self.database_manager.test_connection():
-                self.logger.warning("数据库连接失败，应用程序将继续运行但可能无法使用数据库功能")
-                if self.splash:
-                    self.splash.showMessage("数据库连接失败...", Qt.AlignmentFlag.AlignCenter, Qt.GlobalColor.red)
-                    self.app.processEvents()
-                    QTimer.singleShot(2000, self.splash.close)
-            else:
-                self.logger.info("数据库连接成功")
+            # 数据库连接延迟到主窗口创建时进行
+            # 这避免了在GUI启动前阻塞
             
             if self.splash:
                 self.splash.showMessage("正在创建主窗口...", Qt.AlignmentFlag.AlignCenter, Qt.GlobalColor.black)
@@ -135,6 +121,10 @@ class Application:
             
             # 创建主窗口
             self.main_window = MainWindow()
+            
+            # 延迟初始化数据库管理器
+            self.database_manager = None
+            # 数据库连接由MainWindow内部处理
             
             # 连接主题变化信号
             self.theme_manager.theme_changed.connect(self.main_window.apply_theme)
@@ -149,18 +139,17 @@ class Application:
     def show_welcome_message(self):
         """显示欢迎消息"""
         try:
-            if self.database_manager.test_connection():
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Icon.Information)
-                msg.setWindowTitle("欢迎使用")
-                msg.setText("投标管理软件已成功启动！\n\n"
-                           "功能特性：\n"
-                           "• 无边框现代化界面\n"
-                           "• 智能主题适配\n"
-                           "• MySQL数据库支持\n"
-                           "• 完整的投标管理功能")
-                msg.setStandardButtons(QMessageBox.StandardButton.Ok)
-                msg.exec()
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Icon.Information)
+            msg.setWindowTitle("欢迎使用")
+            msg.setText("投标管理软件已成功启动！\n\n"
+                       "功能特性：\n"
+                       "• 无边框现代化界面\n"
+                       "• 智能主题适配\n"
+                       "• MySQL数据库支持\n"
+                       "• 完整的投标管理功能")
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.exec()
         except Exception as e:
             self.logger.warning(f"显示欢迎消息失败: {e}")
     
@@ -173,8 +162,8 @@ class Application:
             # 显示主窗口
             self.main_window.show()
             
-            # 可选：显示欢迎消息
-            # QTimer.singleShot(1000, self.show_welcome_message)
+            # 显示欢迎消息
+            QTimer.singleShot(1000, self.show_welcome_message)
             
             self.logger.info("应用程序启动成功")
             
