@@ -313,6 +313,16 @@ class MySQLConfigDialog(QDialog):
                 input_widget.setReadOnly(False)
             if hasattr(input_widget, 'setEnabled'):
                 input_widget.setEnabled(True)
+        
+        # 启用所有按钮
+        buttons = [self.test_btn, self.init_btn, self.save_btn]
+        for button in buttons:
+            if hasattr(button, 'setEnabled'):
+                button.setEnabled(True)
+        
+        # 特别处理测试连接按钮的文本
+        if hasattr(self.test_btn, 'setText'):
+            self.test_btn.setText("测试连接")  # 恢复原始文本
 
     def get_admin_password(self):
         """ 获取管理员密码 """
