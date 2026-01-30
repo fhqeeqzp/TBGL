@@ -15,9 +15,10 @@ class DatabaseManager:
         self.config = self._load_config()
         self.logger = self._setup_logger()
         self._lock = threading.Lock()
+        self.initialized = False
         
-        # 尝试连接数据库
-        self.connect()
+        # 不立即连接数据库
+        # 延迟初始化以避免阻塞GUI
     
     def _load_config(self) -> Dict[str, Any]:
         """加载数据库配置"""
@@ -73,6 +74,9 @@ class DatabaseManager:
                 if self.connection.is_connected():
                     self.cursor = self.connection.cursor()
                     self.logger.info(f"成功连接到数据库: {self.config['host']}:{self.config['port']}")
+                    
+                    # 标记为已初始化
+                    self.initialized = True
                     
                     # 初始化数据库（如果需要）
                     self._initialize_database()
@@ -237,7 +241,9 @@ class DatabaseManager:
         cursor = None
         try:
             if not self.connection or not self.connection.is_connected():
-                self.connect()
+                # 尝试重新连接
+                if not self.connect():
+                    raise Error("无法连接到数据库")
             cursor = self.connection.cursor(dictionary=True)
             yield cursor
         except Error as e:

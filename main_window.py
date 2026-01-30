@@ -100,7 +100,10 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.theme_manager = ThemeManager()
-        self.database_manager = DatabaseManager()
+        
+        # 数据库管理器（可能在初始化失败）
+        self.database_manager = None
+        self.database_available = False
         
         # 窗口状态
         self.is_maximized = False
@@ -109,6 +112,26 @@ class MainWindow(QMainWindow):
         self.setup_timers()
         self.apply_theme()
         self.apply_style()
+        
+        # 尝试初始化数据库（在后台进行）
+        self.initialize_database()
+    
+    def initialize_database(self):
+        """初始化数据库连接"""
+        try:
+            from database_manager import DatabaseManager
+            self.database_manager = DatabaseManager()
+            
+            # 测试连接
+            if self.database_manager.test_connection():
+                self.database_available = True
+                print("✓ 数据库连接成功")
+            else:
+                print("⚠ 数据库连接失败，应用程序将以离线模式运行")
+        except Exception as e:
+            print(f"⚠ 数据库初始化失败: {e}")
+            self.database_manager = None
+            self.database_available = False
         
     def setup_ui(self):
         """设置UI"""
@@ -232,7 +255,8 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         """窗口关闭事件"""
         # 清理数据库连接
-        self.database_manager.close_connection()
+        if self.database_manager:
+            self.database_manager.close_connection()
         event.accept()
 
 
