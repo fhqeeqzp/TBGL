@@ -19,6 +19,7 @@ from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QPixmap, QFont, QIcon
 
 from main_window import MainWindow
+from login_window import LoginWindow
 from theme_manager import ThemeManager
 from database_manager import DatabaseManager
 
@@ -159,11 +160,8 @@ class Application:
             # 设置应用程序
             self.setup_application()
             
-            # 显示主窗口
-            self.main_window.show()
-            
-            # 显示欢迎消息
-            QTimer.singleShot(1000, self.show_welcome_message)
+            # 先显示登录窗口
+            self.show_login_window()
             
             self.logger.info("应用程序启动成功")
             
@@ -182,6 +180,42 @@ class Application:
         finally:
             # 清理资源
             self.cleanup()
+    
+    def show_login_window(self):
+        """显示登录窗口"""
+        try:
+            # 创建登录窗口
+            self.login_window = LoginWindow()
+            
+            # 连接登录成功信号
+            self.login_window.login_successful.connect(self.on_login_success)
+            
+            # 显示登录窗口
+            self.login_window.show()
+            
+            self.logger.info("登录窗口已显示")
+            
+        except Exception as e:
+            self.logger.error(f"显示登录窗口失败: {e}")
+            raise
+    
+    def on_login_success(self):
+        """登录成功回调"""
+        try:
+            # 关闭登录窗口
+            if hasattr(self, 'login_window'):
+                self.login_window.close()
+            
+            # 显示主窗口
+            self.main_window.show()
+            
+            # 显示欢迎消息
+            QTimer.singleShot(1000, self.show_welcome_message)
+            
+            self.logger.info("登录成功，显示主窗口")
+            
+        except Exception as e:
+            self.logger.error(f"登录成功后显示主窗口失败: {e}")
     
     def cleanup(self):
         """清理资源"""
