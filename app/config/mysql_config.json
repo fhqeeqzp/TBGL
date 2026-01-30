@@ -1,0 +1,12 @@
+{
+  "host": "localhost",
+  "port": 3306,
+  "user": "root",
+  "password": "lipper",
+  "database": "bidding_system02",
+  "charset": "utf8mb4",
+  "connect_timeout": 30,
+  "auto_reconnect": true,
+  "is_configured": true,
+  "is_initialized": true
+}

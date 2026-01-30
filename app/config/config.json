@@ -1,0 +1,16 @@
+{
+    "MainWindow": {
+        "DpiScale": "Auto",
+        "Language": "Auto",
+        "MicaEnabled": false
+    },
+    "QFluentWidgets": {
+        "FontFamilies": [
+            "Segoe UI",
+            "Microsoft YaHei",
+            "PingFang SC"
+        ],
+        "ThemeColor": "#ff009faa",
+        "ThemeMode": "Auto"
+    }
+}
