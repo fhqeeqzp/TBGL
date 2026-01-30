@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 投标管理软件 - 主入口程序
-使用PyQt6 + MySQL开发的现代化无边框窗口应用
+使用PySide6 + MySQL开发的现代化无边框窗口应用
 """
 
 import sys
@@ -14,9 +14,9 @@ from pathlib import Path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-from PyQt6.QtWidgets import QApplication, QMessageBox, QSplashScreen
-from PyQt6.QtCore import Qt, QTimer
-from PyQt6.QtGui import QPixmap, QFont, QIcon
+from PySide6.QtWidgets import QApplication, QMessageBox, QSplashScreen
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtGui import QPixmap, QFont, QIcon
 
 from main_window import MainWindow
 from login_window import LoginWindow
@@ -244,7 +244,7 @@ def main():
         
         # 检查依赖
         required_modules = [
-            'PyQt6', 'mysql.connector', 'dotenv'
+            'PySide6', 'mysql.connector', 'dotenv'
         ]
         
         missing_modules = []

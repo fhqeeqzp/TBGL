@@ -16,12 +16,12 @@ def test_imports():
     print("正在测试模块导入...")
     
     try:
-        from PyQt6.QtWidgets import QApplication
-        from PyQt6.QtCore import Qt
-        from PyQt6.QtGui import QPalette
-        print("✓ PyQt6 模块导入成功")
+        from PySide6.QtWidgets import QApplication
+        from PySide6.QtCore import Qt
+        from PySide6.QtGui import QPalette
+        print("✓ PySide6 模块导入成功")
     except ImportError as e:
-        print(f"✗ PyQt6 模块导入失败: {e}")
+        print(f"✗ PySide6 模块导入失败: {e}")
         return False
     
     try:
@@ -121,7 +121,7 @@ def test_application():
     
     try:
         # 创建一个临时的QApplication实例
-        from PyQt6.QtWidgets import QApplication
+        from PySide6.QtWidgets import QApplication
         app = QApplication([])
         
         from main_window import MainWindow

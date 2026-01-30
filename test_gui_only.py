@@ -4,9 +4,9 @@ GUI测试程序 - 仅测试界面功能，不依赖数据库
 """
 
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QFrame, QSpacerItem, QSizePolicy, QMessageBox
-from PyQt6.QtCore import Qt, QPoint, QTimer
-from PyQt6.QtGui import QFont, QPalette, QColor
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QFrame, QSpacerItem, QSizePolicy, QMessageBox
+from PySide6.QtCore import Qt, QPoint, QTimer
+from PySide6.QtGui import QFont, QPalette, QColor
 
 
 class TitleBar(QFrame):

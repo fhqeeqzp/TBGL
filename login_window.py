@@ -4,12 +4,12 @@
 """
 
 import sys
-from PyQt6.QtWidgets import (
+from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, 
     QPushButton, QFrame, QSpacerItem, QSizePolicy, QMessageBox, QApplication
 )
-from PyQt6.QtCore import Qt, QPoint, QTimer, pyqtSignal
-from PyQt6.QtGui import QFont, QPixmap, QPalette, QBrush, QColor, QPainter, QPen
+from PySide6.QtCore import Qt, QPoint, QTimer, Signal
+from PySide6.QtGui import QFont, QPixmap, QPalette, QBrush, QColor, QPainter, QPen
 
 
 class LoginTitleBar(QFrame):
@@ -84,7 +84,7 @@ class LoginWindow(QWidget):
     """登录窗口类"""
     
     # 登录成功信号
-    login_successful = pyqtSignal()
+    login_successful = Signal()
     
     def __init__(self):
         super().__init__()

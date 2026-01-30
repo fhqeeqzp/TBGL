@@ -4,7 +4,7 @@
 """
 
 import sys
-from PyQt6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication
 
 # 添加项目根目录到Python路径
 import os

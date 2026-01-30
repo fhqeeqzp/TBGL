@@ -19,3 +19,15 @@
 2026-01-30 19:43:45,387 - __main__ - INFO - 登录窗口已显示
 2026-01-30 19:43:45,387 - __main__ - INFO - 应用程序启动成功
 2026-01-30 19:43:49,344 - DatabaseManager - INFO - 正在连接到MySQL数据库...
+2026-01-30 19:52:35,839 - __main__ - INFO - 应用程序组件初始化完成
+2026-01-30 19:52:36,946 - __main__ - INFO - 登录窗口已显示
+2026-01-30 19:52:36,946 - __main__ - INFO - 应用程序启动成功
+2026-01-30 19:52:40,944 - DatabaseManager - INFO - 正在连接到MySQL数据库...
+2026-01-30 19:52:41,120 - DatabaseManager - INFO - 成功连接到数据库: localhost:3306
+2026-01-30 19:52:41,132 - DatabaseManager - INFO - 表 'users' 创建成功或已存在
+2026-01-30 19:52:41,139 - DatabaseManager - INFO - 表 'projects' 创建成功或已存在
+2026-01-30 19:52:41,273 - DatabaseManager - INFO - 表 'bids' 创建成功或已存在
+2026-01-30 19:52:41,415 - DatabaseManager - INFO - 表 'documents' 创建成功或已存在
+2026-01-30 19:52:41,512 - DatabaseManager - INFO - 表 'audit_logs' 创建成功或已存在
+2026-01-30 19:53:10,130 - __main__ - INFO - 正在清理应用程序资源...
+2026-01-30 19:53:10,130 - __main__ - INFO - 资源清理完成

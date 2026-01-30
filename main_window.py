@@ -1,8 +1,8 @@
 import sys
 import os
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QFrame, QSpacerItem, QSizePolicy
-from PyQt6.QtCore import Qt, QPoint, QTimer, pyqtSignal
-from PyQt6.QtGui import QFont, QIcon, QPalette, QBrush, QColor, QPainter, QPen
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QFrame, QSpacerItem, QSizePolicy
+from PySide6.QtCore import Qt, QPoint, QTimer, Signal
+from PySide6.QtGui import QFont, QIcon, QPalette, QBrush, QColor, QPainter, QPen
 from theme_manager import ThemeManager
 from database_manager import DatabaseManager
 

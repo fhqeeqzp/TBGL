@@ -2,15 +2,15 @@ import sys
 import os
 import platform
 from typing import Dict, Any
-from PyQt6.QtCore import QObject, pyqtSignal
-from PyQt6.QtGui import QPalette, QColor
-from PyQt6.QtWidgets import QApplication
+from PySide6.QtCore import QObject, Signal
+from PySide6.QtGui import QPalette, QColor
+from PySide6.QtWidgets import QApplication
 
 
 class ThemeManager(QObject):
     """主题管理器 - 检测和适应系统主题变化"""
     
-    theme_changed = pyqtSignal()
+    theme_changed = Signal()
     
     def __init__(self):
         super().__init__()
